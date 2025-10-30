@@ -1,0 +1,32 @@
+# Wordpress application with MariaDB using Docker Compose
+
+services:
+  db:
+    image: mariadb:11.8
+    container_name: wp-db
+    environment:
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: test
+      MYSQL_PASSWORD: test
+      MYSQL_ROOT_PASSWORD: test
+    volumes:
+      - wp_db:/var/lib/mysql
+
+  app:
+    image: wordpress:php8.4-apache
+    container_name: wp-app
+    ports:
+      - "8081:80"
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_NAME: wordpress
+      WORDPRESS_DB_USER: test
+      WORDPRESS_DB_PASSWORD: test
+    volumes:
+      - wp_app:/var/www/html
+    depends_on:
+      - db
+
+volumes:
+  wp_db:
+  wp_app:

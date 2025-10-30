@@ -1,0 +1,26 @@
+# dDrupal with MariaDB using Docker Compose
+services:
+  db:
+    image: mariadb:11.4
+    container_name: drupal-db
+    environment:
+      MYSQL_DATABASE: drupal
+      MYSQL_USER: test
+      MYSQL_PASSWORD: test
+      MYSQL_ROOT_PASSWORD: test
+    volumes:
+      - dr_db:/var/lib/mysql
+
+  app:
+    image: drupal:10-apache
+    container_name: drupal-app
+    ports:
+      - "8083:80"
+    volumes:
+      - dr_app:/var/www/html
+    depends_on:
+      - db
+
+volumes:
+  dr_db:
+  dr_app:
