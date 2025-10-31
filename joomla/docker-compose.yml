@@ -12,7 +12,7 @@ services:
       - jm_db:/var/lib/mysql
 
   app:
-    image: joomla:4-php8.2-apache
+    image: joomla:5.4-php8.2-apache
     container_name: joomla-app
     ports:
       - "8082:80"
