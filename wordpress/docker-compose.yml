@@ -2,31 +2,30 @@
 
 services:
   db:
-    image: mariadb:11.8
+    image: mariadb:11.4
     container_name: wp-db
+    restart: unless-stopped
     environment:
-      MYSQL_DATABASE: wordpress
-      MYSQL_USER: test
-      MYSQL_PASSWORD: test
-      MYSQL_ROOT_PASSWORD: test
+      MYSQL_DATABASE: wp
+      MYSQL_USER: wp
+      MYSQL_PASSWORD: wp
+      MYSQL_ROOT_PASSWORD: wp
     volumes:
-      - wp_db:/var/lib/mysql
+      - ./dbdata:/var/lib/mysql
 
   app:
-    image: wordpress:php8.4-apache
+    image: wordpress:6-php8.2-apache
     container_name: wp-app
-    ports:
-      - "8081:80"
-    environment:
-      WORDPRESS_DB_HOST: db:3306
-      WORDPRESS_DB_NAME: wordpress
-      WORDPRESS_DB_USER: test
-      WORDPRESS_DB_PASSWORD: test
-    volumes:
-      - wp_app:/var/www/html
+    restart: unless-stopped
     depends_on:
       - db
-
-volumes:
-  wp_db:
-  wp_app:
+    ports:
+      - "8083:80"
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_NAME: wp
+      WORDPRESS_DB_USER: wp
+      WORDPRESS_DB_PASSWORD: wp
+    volumes:
+      - ./site:/var/www/html
+      - ./php/uploads.ini:/usr/local/etc/php/conf.d/uploads.ini

@@ -1,31 +1,29 @@
-# Joomla with MariaDB using Docker Compose
 services:
   db:
     image: mariadb:11.4
     container_name: joomla-db
+    restart: unless-stopped
     environment:
       MYSQL_DATABASE: joomla
-      MYSQL_USER: test
-      MYSQL_PASSWORD: test
-      MYSQL_ROOT_PASSWORD: test
+      MYSQL_USER: joomla
+      MYSQL_PASSWORD: joomla
+      MYSQL_ROOT_PASSWORD: joomla
     volumes:
-      - jm_db:/var/lib/mysql
+      - ./dbdata:/var/lib/mysql
 
   app:
     image: joomla:5.4-php8.2-apache
     container_name: joomla-app
+    restart: unless-stopped
+    depends_on:
+      - db
     ports:
       - "8082:80"
     environment:
       JOOMLA_DB_HOST: db:3306
       JOOMLA_DB_NAME: joomla
-      JOOMLA_DB_USER: test
-      JOOMLA_DB_PASSWORD: test
+      JOOMLA_DB_USER: joomla
+      JOOMLA_DB_PASSWORD: joomla
     volumes:
-      - jm_app:/var/www/html
-    depends_on:
-      - db
-
-volumes:
-  jm_db:
-  jm_app:
+      - ./site:/var/www/html
+      - ./php/uploads.ini:/usr/local/etc/php/conf.d/uploads.ini

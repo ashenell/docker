@@ -137,3 +137,8 @@ dist
 # Vite logs files
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
+
+# git ignore joomla files
+joomla/dbdata/
+joomla/site/
+joomla/php/
