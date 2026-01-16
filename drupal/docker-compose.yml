@@ -1,8 +1,6 @@
-# dDrupal with MariaDB using Docker Compose
 services:
   db:
     image: mariadb:11.4
-    container_name: drupal-db
     restart: unless-stopped
     environment:
       MYSQL_DATABASE: drupal
@@ -10,16 +8,20 @@ services:
       MYSQL_PASSWORD: drupal
       MYSQL_ROOT_PASSWORD: drupal
     volumes:
-      - ./dbdata:/var/lib/mysql
+      - db_data:/var/lib/mysql
 
   app:
-    image: drupal:10-apache
-    container_name: drupal-app
+    image: drupal:11-apache
     restart: unless-stopped
     depends_on:
       - db
     ports:
       - "8084:80"
     volumes:
-      - ./site:/var/www/html
-      - ./php/uploads.ini:/usr/local/etc/php/conf.d/uploads.ini
+      - ./site:/opt/drupal
+      - ./php/uploads.ini:/usr/local/etc/php/conf.d/uploads.ini:ro
+
+volumes:
+  db_data: {}
+
+
